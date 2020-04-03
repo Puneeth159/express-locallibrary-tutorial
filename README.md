@@ -1,2 +1,1 @@
-# express-locallibrary-tutorial
-This is an MVC App
+# This is an MVC App
