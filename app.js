@@ -1,5 +1,7 @@
 const createError = require('http-errors');
 const express = require('express');
+const dotenv = require('dotenv');
+
 
 
 const path = require('path');
@@ -8,14 +10,17 @@ const logger = require('morgan');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const catalogRouter = require('./routes/catalog');
 
 const app = express();
-
+dotenv.config({path: '.env'});
+//Set up mongoose connection
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
-const mongoDB = 'mongodb+srv://S538293:Hansini@123@cluster0-zx4yc.azure.mongodb.net/local_library?retryWrites=true&w=majority';
+const mongoDB = process.env.ATLAS_URI;
 mongoose.connect(mongoDB, {
-useNewUrlParser: true,useUnifiedTopology: true});
+useNewUrlParser: true,useUnifiedTopology: true
+});
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
@@ -31,6 +36,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/catalog', catalogRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -49,4 +55,3 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
-
